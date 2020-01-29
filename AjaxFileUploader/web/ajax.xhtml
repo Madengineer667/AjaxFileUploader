@@ -1,0 +1,49 @@
+<!DOCTYPE html [
+    <!ENTITY nbsp "&#160;">
+    <!ENTITY copyright "&#169;">
+    <!ENTITY times "&#215;">]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">    
+    <h:head>            
+        <title>File upload</title>
+        <script type="text/javascript">
+            function performAjaxSubmit() {
+                var sampleText = document.getElementById("sampleText").value;
+                var sampleFile = document.getElementById("sampleFile").files[0];                
+                var formdata = new FormData();
+                formdata.append("sampleText", sampleText);
+                formdata.append("sampleFile", sampleFile);
+                var xhr = new XMLHttpRequest();               
+                xhr.open("POST", "#{request.contextPath}"+"/fileUploader", true);
+                
+                // IE bug work-around
+                xhr.onprogress = function () { };
+                xhr.ontimeout = function () { };
+                xhr.onerror = function () { };
+		                
+                xhr.onload = function (e) {
+                    if (this.status != 200) {
+                        alert("Error status:"+this.status);
+                    }
+                    if (this.status == 200) {
+                        alert("Success!");
+                    }
+                };
+		                
+                // IE bug work-around
+                setTimeout(function () {
+                        xhr.send(formdata);
+                }, 0);	
+            }
+        </script>            
+    </h:head>
+    <h:body>
+        <h:form id="contentForm">            
+            <label for="sampleText">Please enter a text</label>
+            <input id="sampleText" name="sampleText" type="text" /> <br/>
+            <label for="sampleFile">Please select a file</label>
+            <input id="sampleFile" name="sampleFile" type="file" /> <br/>
+            <input id="uploadBtn" type="button" value="Ajax Submit" onClick="performAjaxSubmit();"></input>
+        </h:form>
+    </h:body>
+</html>
